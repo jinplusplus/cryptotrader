@@ -112,7 +112,7 @@ func (z *ZB) GetTicker(base string, quote string) (*model.Ticker, error) {
 //   * etc_cny: 可选 0.3, 0.1
 //   * bts_cny: 可选 1, 0.1
 func (z *ZB) GetOrderBook(base string, quote string, size int, merge float64) (*model.OrderBook, error) {
-	url := MarketAPI + "depth?currency=" + quote + "_" + base + "&size=" + strconv.Itoa(size) + "&merge=" + strconv.FormatFloat(merge, 'f', -1, 64)
+	url := MarketAPI + "depth?market=" + quote + "_" + base + "&size=" + strconv.Itoa(size) + "&merge=" + strconv.FormatFloat(merge, 'f', -1, 64)
 
 	log.Debugf("Request url: %v", url)
 
@@ -163,7 +163,7 @@ func (z *ZB) GetOrderBook(base string, quote string, size int, merge float64) (*
 //   * bts_cny: BTS币/人民币
 // * since: 从指定交易 ID 后 50 条数据
 func (z *ZB) GetTrades(base string, quote string, since int) (*model.Trades, error) {
-	url := MarketAPI + "trades?currency=" + quote + "_" + base
+	url := MarketAPI + "trades?market=" + quote + "_" + base
 	if since != 0 {
 		url += "&since=" + strconv.Itoa(since)
 	}
@@ -222,7 +222,7 @@ func (z *ZB) GetTrades(base string, quote string, since int) (*model.Trades, err
 // * since: 从这个时间戳之后的
 // * size: 返回数据的条数限制(默认为 1000, 如果返回数据多于 1000 条, 那么只返回 1000 条)
 func (z *ZB) GetRecords(base string, quote string, typ string, since int, size int) ([]model.Record, error) {
-	url := MarketAPI + "kline?currency=" + quote + "_" + base
+	url := MarketAPI + "kline?market=" + quote + "_" + base
 
 	if len(typ) != 0 {
 		url += "&type=" + typ
