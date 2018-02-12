@@ -3,9 +3,9 @@ package alert_test
 import (
 	"testing"
 
-	"github.com/Akagi201/cryptotrader/cmd/alert/alert"
-	"github.com/Akagi201/cryptotrader/cmd/alert/context"
-	"github.com/Akagi201/esalert/search"
+	"github.com/forchain/cryptotrader/cmd/alert/alert"
+	"github.com/forchain/cryptotrader/cmd/alert/context"
+	"github.com/forchain/esalert/search"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	yaml "gopkg.in/yaml.v2"

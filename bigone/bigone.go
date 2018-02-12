@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	"github.com/golang-plus/uuid"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -109,8 +109,8 @@ func (c *Client) getResponse(req *http.Request) ([]byte, error) {
 }
 
 // GetTicker Get a Market, for GET https://api.big.one/markets/{symbol}
-func (c *Client) GetTicker(ctx context.Context, quote string, base string) (*model.BigONETicker, error) {
-	req, err := c.newRequest(ctx, "GET", "markets/"+strings.ToUpper(quote)+"-"+strings.ToUpper(base), nil, nil)
+func (c *Client) GetTicker(ctx context.Context, base string, quote string) (*model.BigONETicker, error) {
+	req, err := c.newRequest(ctx, "GET", "markets/"+strings.ToUpper(base)+"-"+strings.ToUpper(quote), nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -169,8 +169,8 @@ func (c *Client) GetTicker(ctx context.Context, quote string, base string) (*mod
 }
 
 // GetDepth Order book, for GET https://api.big.one/markets/{symbol}/book
-func (c *Client) GetDepth(ctx context.Context, quote string, base string) (*model.OrderBook, error) {
-	req, err := c.newRequest(ctx, "GET", "markets/"+strings.ToUpper(quote)+"-"+strings.ToUpper(base)+"/book", nil, nil)
+func (c *Client) GetDepth(ctx context.Context, base string, quote string) (*model.OrderBook, error) {
+	req, err := c.newRequest(ctx, "GET", "markets/"+strings.ToUpper(base)+"-"+strings.ToUpper(quote)+"/book", nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -202,8 +202,8 @@ func (c *Client) GetDepth(ctx context.Context, quote string, base string) (*mode
 }
 
 // GetTrades List Trades in the Market, for GET https://api.big.one/markets/{symbol}/trades
-func (c *Client) GetTrades(ctx context.Context, quote string, base string) ([]model.BigONETrade, error) {
-	req, err := c.newRequest(ctx, "GET", "markets/"+strings.ToUpper(quote)+"-"+strings.ToUpper(base)+"/trades", nil, nil)
+func (c *Client) GetTrades(ctx context.Context, base string, quote string) ([]model.BigONETrade, error) {
+	req, err := c.newRequest(ctx, "GET", "markets/"+strings.ToUpper(base)+"-"+strings.ToUpper(quote)+"/trades", nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -231,7 +231,7 @@ func (c *Client) GetTrades(ctx context.Context, quote string, base string) ([]mo
 }
 
 // Trade Create an Order, side: BID or ASK, for POST https://api.big.one/orders
-func (c *Client) Trade(ctx context.Context, quote string, base string, side string, quantity float64, price float64) (string, error) {
+func (c *Client) Trade(ctx context.Context, base string, quote string, side string, quantity float64, price float64) (string, error) {
 	reqBody := `{
 		"order_market": "ETH-BTC",
 		"order_side": "BID",
@@ -239,7 +239,7 @@ func (c *Client) Trade(ctx context.Context, quote string, base string, side stri
 		"amount": "0.00001"
 	}`
 
-	reqBody, _ = sjson.Set(reqBody, "order_market", strings.ToUpper(quote)+"-"+strings.ToUpper(base))
+	reqBody, _ = sjson.Set(reqBody, "order_market", strings.ToUpper(base)+"-"+strings.ToUpper(quote))
 	reqBody, _ = sjson.Set(reqBody, "order_side", side)
 	reqBody, _ = sjson.Set(reqBody, "price", cast.ToString(price))
 	reqBody, _ = sjson.Set(reqBody, "amount", cast.ToString(quantity))
@@ -264,7 +264,7 @@ func (c *Client) Trade(ctx context.Context, quote string, base string, side stri
 }
 
 // GetOrder Check an order's status, for GET /api/v3/order
-func (c *Client) GetOrder(ctx context.Context, quote string, base string, orderID string) (*model.BigONEOrder, error) {
+func (c *Client) GetOrder(ctx context.Context, base string, quote string, orderID string) (*model.BigONEOrder, error) {
 	req, err := c.newPrivateRequest(ctx, "GET", "orders/"+orderID, nil, nil)
 	if err != nil {
 		return nil, err
@@ -292,9 +292,9 @@ func (c *Client) GetOrder(ctx context.Context, quote string, base string, orderI
 }
 
 // GetOrders Get all open orders on a symbol, for GET /orders{?market,limit}
-func (c *Client) GetOrders(ctx context.Context, quote string, base string, limit int64) ([]model.BigONEOrder, error) {
+func (c *Client) GetOrders(ctx context.Context, base string, quote string, limit int64) ([]model.BigONEOrder, error) {
 	v := url.Values{}
-	v.Set("market", strings.ToUpper(quote)+"-"+strings.ToUpper(base))
+	v.Set("market", strings.ToUpper(base)+"-"+strings.ToUpper(quote))
 	v.Set("limit", cast.ToString(limit))
 
 	req, err := c.newPrivateRequest(ctx, "GET", "orders", v, nil)
@@ -330,8 +330,8 @@ func (c *Client) GetOrders(ctx context.Context, quote string, base string, limit
 }
 
 // CancelOrder Cancel an Order for DELETE https://api.big.one/orders/{id}
-func (c *Client) CancelOrder(ctx context.Context, quote string, base string, orderID string) error {
-	req, err := c.newPrivateRequest(ctx, "DELETE", "orders/"+strings.ToUpper(quote)+"-"+strings.ToUpper(base), nil, nil)
+func (c *Client) CancelOrder(ctx context.Context, base string, quote string, orderID string) error {
+	req, err := c.newPrivateRequest(ctx, "DELETE", "orders/"+strings.ToUpper(base)+"-"+strings.ToUpper(quote), nil, nil)
 	if err != nil {
 		return err
 	}

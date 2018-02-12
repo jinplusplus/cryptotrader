@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
-	bitfinex "github.com/bitfinexcom/bitfinex-api-go/v1"
+	"github.com/forchain/cryptotrader/model"
+	"github.com/bitfinexcom/bitfinex-api-go/v1"
 )
 
 // Bitfinex API data
@@ -30,7 +30,7 @@ func New(accessKey string, secretKey string) *Bitfinex {
 
 // GetTicker 行情
 func (bf *Bitfinex) GetTicker(base string, quote string) (*model.Ticker, error) {
-	tick, err := bf.Ticker.Get(strings.ToUpper(quote) + strings.ToUpper(base))
+	tick, err := bf.Ticker.Get(strings.ToUpper(base) + strings.ToUpper(quote))
 
 	buy, err := strconv.ParseFloat(tick.Bid, 64)
 	if err != nil {

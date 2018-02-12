@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Akagi201/cryptotrader/binance"
+	"github.com/forchain/cryptotrader/binance"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )

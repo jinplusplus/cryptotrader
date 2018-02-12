@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
@@ -32,7 +32,7 @@ func New(accessKey string, secretKey string) *Viabtc {
 
 // GetTicker 行情
 func (vb *Viabtc) GetTicker(base string, quote string) (*model.Ticker, error) {
-	url := API + "market/ticker?market=" + strings.ToUpper(quote) + strings.ToUpper(base)
+	url := API + "market/ticker?market=" + strings.ToUpper(base) + strings.ToUpper(quote)
 
 	log.Debugf("Request url: %v", url)
 

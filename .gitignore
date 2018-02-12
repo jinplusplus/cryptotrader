@@ -19,3 +19,7 @@
 /cmd/yunbimonitor/yunbimonitor
 /cmd/marketmaker/marketmaker
 /cmd/tradebot/tradebot
+.idea/inspectionProfiles/
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml

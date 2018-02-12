@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/Akagi201/binancego"
+	binancego  "github.com/forchain/cryptotrader/binance"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -37,7 +37,7 @@ func onTick() {
 }
 
 func main() {
-	bc = binancego.NewClient(opts.AccessKey, opts.SecretKey)
+	bc = binancego.New(opts.AccessKey, opts.SecretKey)
 
 	for {
 		onTick()

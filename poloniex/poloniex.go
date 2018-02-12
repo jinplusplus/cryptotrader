@@ -7,7 +7,7 @@ import (
 
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"

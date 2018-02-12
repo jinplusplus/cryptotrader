@@ -11,7 +11,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
@@ -138,9 +138,9 @@ func (c *Client) GetMarketInfo(ctx context.Context) ([]model.MarketInfo, error) 
 	return marketInfos, nil
 }
 
-// GetTicker 返回最新, 最高, 最低 交易行情和交易量, 每 10 秒钟更新, for http://data.gate.io/api2/1/ticker/[quote]_[base]
-func (c *Client) GetTicker(ctx context.Context, quote string, base string) (*model.Ticker, error) {
-	req, err := c.newRequest(ctx, "GET", "ticker/"+strings.ToUpper(quote)+"_"+strings.ToUpper(base), nil, nil)
+// GetTicker 返回最新, 最高, 最低 交易行情和交易量, 每 10 秒钟更新, for http://data.gate.io/api2/1/ticker/[base]_[quote]
+func (c *Client) GetTicker(ctx context.Context, base string, quote string) (*model.Ticker, error) {
+	req, err := c.newRequest(ctx, "GET", "ticker/"+strings.ToUpper(base)+"_"+strings.ToUpper(quote), nil, nil)
 	if err != nil {
 		return nil, err
 	}

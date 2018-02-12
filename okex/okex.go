@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	"github.com/Akagi201/utilgo/signs"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -124,9 +124,9 @@ func (c *Client) getResponse(req *http.Request) ([]byte, error) {
 }
 
 // GetTicker 获取OKEx最新币币行情数据, for Get /api/v1/ticker.do
-func (c *Client) GetTicker(ctx context.Context, quote string, base string) (*model.Ticker, error) {
+func (c *Client) GetTicker(ctx context.Context, base string, quote string) (*model.Ticker, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToLower(quote)+"_"+strings.ToLower(base))
+	v.Set("symbol", strings.ToLower(base)+"_"+strings.ToLower(quote))
 
 	req, err := c.newRequest(ctx, "GET", "ticker.do", v, nil)
 	if err != nil {
@@ -188,9 +188,9 @@ func (c *Client) GetTicker(ctx context.Context, quote string, base string) (*mod
 }
 
 // GetDepth 获取币币市场深度, for Get /api/v1/depth
-func (c *Client) GetDepth(ctx context.Context, quote string, base string) (*model.OrderBook, error) {
+func (c *Client) GetDepth(ctx context.Context, base string, quote string) (*model.OrderBook, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToLower(quote)+"_"+strings.ToLower(base))
+	v.Set("symbol", strings.ToLower(base)+"_"+strings.ToLower(quote))
 
 	req, err := c.newRequest(ctx, "GET", "depth.do", v, nil)
 	if err != nil {
@@ -224,9 +224,9 @@ func (c *Client) GetDepth(ctx context.Context, quote string, base string) (*mode
 }
 
 // GetTrades 获取币币交易信息, for GET https://www.okex.com/api/v1/trades.do
-func (c *Client) GetTrades(ctx context.Context, quote string, base string) ([]model.Trade, error) {
+func (c *Client) GetTrades(ctx context.Context, base string, quote string) ([]model.Trade, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToLower(quote)+"_"+strings.ToLower(base))
+	v.Set("symbol", strings.ToLower(base)+"_"+strings.ToLower(quote))
 
 	req, err := c.newRequest(ctx, "GET", "trades.do", v, nil)
 	if err != nil {
@@ -256,9 +256,9 @@ func (c *Client) GetTrades(ctx context.Context, quote string, base string) ([]mo
 }
 
 // GetRecords 获取币币K线数据, for GET https://www.okex.com/api/v1/kline.do
-func (c *Client) GetRecords(ctx context.Context, quote string, base string, interval string, since int64, limit int64) ([]model.Record, error) {
+func (c *Client) GetRecords(ctx context.Context, base string, quote string, interval string, since int64, limit int64) ([]model.Record, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToLower(quote)+"_"+strings.ToLower(base))
+	v.Set("symbol", strings.ToLower(base)+"_"+strings.ToLower(quote))
 	v.Set("type", interval)
 
 	if since != 0 {
@@ -266,7 +266,7 @@ func (c *Client) GetRecords(ctx context.Context, quote string, base string, inte
 	}
 
 	if limit != 0 {
-		v.Set("limit", strconv.FormatInt(limit, 10))
+		v.Set("size", strconv.FormatInt(limit, 10))
 	}
 
 	req, err := c.newRequest(ctx, "GET", "kline.do", v, nil)

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Akagi201/cryptotrader/huobi"
-	"github.com/Akagi201/cryptotrader/okcoin"
-	"github.com/Akagi201/cryptotrader/zb"
+	"github.com/forchain/cryptotrader/huobi"
+	"github.com/forchain/cryptotrader/okcoin"
+	"github.com/forchain/cryptotrader/zb"
 	"github.com/goSTL/sort"
 	"github.com/nlopes/slack"
 	"github.com/olekukonko/tablewriter"
@@ -108,7 +108,7 @@ func main() {
 		out := sort.MergeSort(l, cmp)
 
 		exchangeList := []string{"Exchange"}
-		priceList := []string{Opts.Quote + "_" + Opts.Base}
+		priceList := []string{Opts.Base + "_" + Opts.Quote}
 
 		for _, v := range out {
 			exchangeList = append(exchangeList, v.(ExchangePrice).Exchange)

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
@@ -32,7 +32,7 @@ func New(accessKey string, secretKey string) *Yunbi {
 
 // GetTicker 行情
 func (yb *Yunbi) GetTicker(base string, quote string) (*model.Ticker, error) {
-	url := API + "tickers/" + strings.ToLower(quote) + strings.ToLower(base)
+	url := API + "tickers/" + strings.ToLower(base) + strings.ToLower(quote)
 
 	log.Debugf("Request url: %v", url)
 

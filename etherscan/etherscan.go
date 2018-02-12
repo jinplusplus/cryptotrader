@@ -6,7 +6,7 @@ import (
 
 	"math/big"
 
-	"github.com/Akagi201/cryptotrader/util"
+	"github.com/forchain/cryptotrader/util"
 	"github.com/ethereum/go-ethereum/common/math"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cast"

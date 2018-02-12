@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
@@ -40,7 +40,7 @@ func New(accessKey string, secretKey string) *ZB {
 func (z *ZB) GetTicker(base string, quote string) (*model.Ticker, error) {
 	log.Debugf("Currency base: %s, quote: %s", base, quote)
 
-	url := MarketAPI + "ticker?market=" + quote + "_" + base
+	url := MarketAPI + "ticker?market=" + base + "_" + quote
 
 	log.Debugf("Request url: %v", url)
 
@@ -112,7 +112,7 @@ func (z *ZB) GetTicker(base string, quote string) (*model.Ticker, error) {
 //   * etc_cny: 可选 0.3, 0.1
 //   * bts_cny: 可选 1, 0.1
 func (z *ZB) GetOrderBook(base string, quote string, size int, merge float64) (*model.OrderBook, error) {
-	url := MarketAPI + "depth?market=" + quote + "_" + base + "&size=" + strconv.Itoa(size) + "&merge=" + strconv.FormatFloat(merge, 'f', -1, 64)
+	url := MarketAPI + "depth?market=" + base + "_" + quote + "&size=" + strconv.Itoa(size) + "&merge=" + strconv.FormatFloat(merge, 'f', -1, 64)
 
 	log.Debugf("Request url: %v", url)
 
@@ -155,7 +155,7 @@ func (z *ZB) GetOrderBook(base string, quote string, size int, merge float64) (*
 
 // GetTrades 获取历史成交
 //
-// * currency: quote_base
+// * currency: base_quote
 //   * btc_cny: 比特币/人民币
 //   * ltc_cny: 莱特币/人民币
 //   * eth_cny: 以太币/人民币
@@ -163,7 +163,7 @@ func (z *ZB) GetOrderBook(base string, quote string, size int, merge float64) (*
 //   * bts_cny: BTS币/人民币
 // * since: 从指定交易 ID 后 50 条数据
 func (z *ZB) GetTrades(base string, quote string, since int) (*model.Trades, error) {
-	url := MarketAPI + "trades?market=" + quote + "_" + base
+	url := MarketAPI + "trades?market=" + base + "_" + quote
 	if since != 0 {
 		url += "&since=" + strconv.Itoa(since)
 	}
@@ -222,7 +222,7 @@ func (z *ZB) GetTrades(base string, quote string, since int) (*model.Trades, err
 // * since: 从这个时间戳之后的
 // * size: 返回数据的条数限制(默认为 1000, 如果返回数据多于 1000 条, 那么只返回 1000 条)
 func (z *ZB) GetRecords(base string, quote string, typ string, since int, size int) ([]model.Record, error) {
-	url := MarketAPI + "kline?market=" + quote + "_" + base
+	url := MarketAPI + "kline?market=" + base + "_" + quote
 
 	if len(typ) != 0 {
 		url += "&type=" + typ
@@ -334,7 +334,7 @@ func (z *ZB) PlaceOrder(price float64, amount float64, tradeType int, base strin
 	url += "&price=" + strconv.FormatFloat(price, 'f', -1, 64)
 	url += "&amount=" + strconv.FormatFloat(amount, 'f', -1, 64)
 	url += "&tradeType=" + strconv.Itoa(tradeType)
-	url += "&currency=" + quote + "_" + base
+	url += "&currency=" + base + "_" + quote
 	sign := z.Sign(url)
 	url += "&sign=" + sign
 	url += "&reqTime=" + strconv.FormatInt(time.Now().UnixNano()/(int64(time.Millisecond)/int64(time.Nanosecond)), 10)
@@ -375,7 +375,7 @@ func (z *ZB) CancelOrder(id string, base string, quote string) error {
 	url := "method=cancelOrder"
 	url += "&accesskey=" + z.AccessKey
 	url += "&id=" + id
-	url += "&currency=" + quote + "_" + base
+	url += "&currency=" + base + "_" + quote
 	sign := z.Sign(url)
 	url += "&sign=" + sign
 	url += "&reqTime=" + strconv.FormatInt(time.Now().UnixNano()/(int64(time.Millisecond)/int64(time.Nanosecond)), 10)
@@ -410,7 +410,7 @@ func (z *ZB) GetOrder(id string, base string, quote string) (*model.ZBOrder, err
 	url := "method=getOrder"
 	url += "&accesskey=" + z.AccessKey
 	url += "&id=" + id
-	url += "&currency=" + quote + "_" + base
+	url += "&currency=" + base + "_" + quote
 	sign := z.Sign(url)
 	url += "&sign=" + sign
 	url += "&reqTime=" + strconv.FormatInt(time.Now().UnixNano()/(int64(time.Millisecond)/int64(time.Nanosecond)), 10)
@@ -451,7 +451,7 @@ func (z *ZB) GetOrders(tradeType int, base string, quote string, pageIndex int) 
 	url := "method=getOrders"
 	url += "&accesskey=" + z.AccessKey
 	url += "&tradeType=" + strconv.Itoa(tradeType)
-	url += "&currency=" + quote + "_" + base
+	url += "&currency=" + base + "_" + quote
 	url += "&pageIndex=" + strconv.Itoa(pageIndex)
 	sign := z.Sign(url)
 	url += "&sign=" + sign
@@ -500,7 +500,7 @@ func (z *ZB) GetOrdersNew(tradeType int, base string, quote string, pageIndex in
 	url := "method=getOrdersNew"
 	url += "&accesskey=" + z.AccessKey
 	url += "&tradeType=" + strconv.Itoa(tradeType)
-	url += "&currency=" + quote + "_" + base
+	url += "&currency=" + base + "_" + quote
 	url += "&pageIndex=" + strconv.Itoa(pageIndex)
 	url += "&pageSize=" + strconv.Itoa(pageSize)
 	sign := z.Sign(url)
@@ -549,7 +549,7 @@ func (z *ZB) GetOrdersNew(tradeType int, base string, quote string, pageIndex in
 func (z *ZB) GetOrdersIgnoreTradeType(base string, quote string, pageIndex int, pageSize int) ([]*model.ZBOrder, error) {
 	url := "method=getOrdersIgnoreTradeType"
 	url += "&accesskey=" + z.AccessKey
-	url += "&currency=" + quote + "_" + base
+	url += "&currency=" + base + "_" + quote
 	url += "&pageIndex=" + strconv.Itoa(pageIndex)
 	url += "&pageSize=" + strconv.Itoa(pageSize)
 	sign := z.Sign(url)
@@ -598,7 +598,7 @@ func (z *ZB) GetOrdersIgnoreTradeType(base string, quote string, pageIndex int, 
 func (z *ZB) GetUnfinishedOrdersIgnoreTradeType(base string, quote string, pageIndex int, pageSize int) ([]*model.ZBOrder, error) {
 	url := "method=getUnfinishedOrdersIgnoreTradeType"
 	url += "&accesskey=" + z.AccessKey
-	url += "&currency=" + quote + "_" + base
+	url += "&currency=" + base + "_" + quote
 	url += "&pageIndex=" + strconv.Itoa(pageIndex)
 	url += "&pageSize=" + strconv.Itoa(pageSize)
 	sign := z.Sign(url)

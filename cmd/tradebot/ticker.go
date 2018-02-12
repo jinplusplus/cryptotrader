@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Akagi201/cryptotrader/binance"
-	"github.com/Akagi201/cryptotrader/zb"
+	"github.com/forchain/cryptotrader/binance"
+	"github.com/forchain/cryptotrader/zb"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
@@ -19,12 +19,12 @@ type TickerCmd struct {
 func (tc *TickerCmd) Execute(args []string) error {
 	log.Debugf("ticker command average: %v, args: %v", tc.Average, args)
 	if len(args) != 1 {
-		return errors.New("Wrong args format, use tradebot ticker [exchange].<quote-base> instead")
+		return errors.New("Wrong args format, use tradebot ticker [exchange].<base-quote> instead")
 	}
 	var exchange string
 	var pair string
-	var quote string
 	var base string
+	var quote string
 	words := strings.Split(args[0], ".")
 	if len(words) == 2 {
 		exchange = words[0]
@@ -32,14 +32,14 @@ func (tc *TickerCmd) Execute(args []string) error {
 	} else if len(words) == 1 {
 		pair = args[0]
 	} else {
-		return errors.New("Wrong args format, use tradebot ticker [exchange].<quote-base> instead")
+		return errors.New("Wrong args format, use tradebot ticker [exchange].<base-quote> instead")
 	}
 	pairWords := strings.Split(pair, "-")
 	if len(pairWords) != 2 {
-		return errors.New("Wrong args format, use tradebot ticker [exchange].<quote-base> instead")
+		return errors.New("Wrong args format, use tradebot ticker [exchange].<base-quote> instead")
 	}
-	quote = pairWords[0]
-	base = pairWords[1]
+	base = pairWords[0]
+	quote = pairWords[1]
 
 	prices := make(map[string]float64)
 	if exchange == "" {
@@ -50,7 +50,7 @@ func (tc *TickerCmd) Execute(args []string) error {
 				ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 				defer cancel()
 
-				t, _ := c.GetTicker(ctx, quote, base)
+				t, _ := c.GetTicker(ctx, base, quote)
 				prices[v] = t.Last
 				fmt.Printf("%v.%v: %v\n", v, pair, t.Last)
 			case "zb":
@@ -75,7 +75,7 @@ func (tc *TickerCmd) Execute(args []string) error {
 			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			defer cancel()
 
-			t, _ := c.GetTicker(ctx, quote, base)
+			t, _ := c.GetTicker(ctx, base, quote)
 			fmt.Printf("%v.%v: %v\n", exchange, pair, t.Last)
 		case "zb":
 			c := zb.New("", "")

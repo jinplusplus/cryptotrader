@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/Akagi201/cryptotrader/cmd/alert/config"
-	"github.com/Akagi201/esalert/alert"
+	"github.com/forchain/cryptotrader/cmd/alert/config"
+	"github.com/forchain/esalert/alert"
 	log "github.com/sirupsen/logrus"
 	yaml "gopkg.in/yaml.v2"
 )

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
@@ -32,7 +32,7 @@ func New(accessKey string, secretKey string) *Coinegg {
 
 // GetTicker 行情
 func (*Coinegg) GetTicker(base string, quote string) (*model.Ticker, error) {
-	url := API + "api/v1/ticker" + "?coin=" + strings.ToLower(quote)
+	url := API + "api/v1/ticker" + "?coin=" + strings.ToLower(base)
 
 	log.Debugf("Request url: %v", url)
 

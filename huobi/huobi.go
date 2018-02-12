@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
@@ -31,7 +31,7 @@ func New(accessKey string, secretKey string) *Huobi {
 
 // GetTicker 行情
 func (hb *Huobi) GetTicker(base string, quote string) (*model.Ticker, error) {
-	url := API + "market/detail/merged?symbol=" + strings.ToLower(quote) + strings.ToLower(base)
+	url := API + "market/detail/merged?symbol=" + strings.ToLower(base) + strings.ToLower(quote)
 
 	log.Debugf("Request url: %v", url)
 

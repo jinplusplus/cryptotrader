@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
@@ -31,7 +31,7 @@ func New(accessKey string, secretKey string) *Liqui {
 
 // GetTicker 行情
 func (lq *Liqui) GetTicker(base string, quote string) (*model.Ticker, error) {
-	pair := strings.ToLower(quote) + "_" + strings.ToLower(base)
+	pair := strings.ToLower(base) + "_" + strings.ToLower(quote)
 	url := API + "ticker/" + pair
 
 	log.Debugf("Request url: %v", url)

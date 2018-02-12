@@ -2,8 +2,8 @@
 package coincheck
 
 import (
-	coincheck "github.com/Akagi201/coincheckgo"
-	"github.com/Akagi201/cryptotrader/model"
+	coincheck "github.com/forchain/coincheckgo"
+	"github.com/forchain/cryptotrader/model"
 	"github.com/tidwall/gjson"
 )
 

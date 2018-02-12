@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Akagi201/cryptotrader/bigone"
-	"github.com/Akagi201/cryptotrader/model"
-	"github.com/Akagi201/cryptotrader/util"
+	"github.com/forchain/cryptotrader/bigone"
+	"github.com/forchain/cryptotrader/model"
+	"github.com/forchain/cryptotrader/util"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 )
@@ -21,8 +21,8 @@ type QuickCmd struct {
 	All      bool    `short:"a" long:"all" description:"trade all my balance"`
 	Interval int     `short:"i" long:"interval" default:"3" description:"tick interval in second"`
 	ApiKey   string  `short:"k" long:"apikey" default:"" description:"API key"`
-	quote    string
 	base     string
+	quote    string
 	client   *bigone.Client
 }
 
@@ -36,14 +36,14 @@ func (qc *QuickCmd) Execute(args []string) error {
 		exchange = words[0]
 		pair = words[1]
 	} else {
-		return errors.New("Wrong pair format, use [exchange].<quote-base> instead")
+		return errors.New("Wrong pair format, use [exchange].<base-quote> instead")
 	}
 	pairWords := strings.Split(pair, "-")
 	if len(pairWords) != 2 {
-		return errors.New("Wrong pair format, use [exchange].<quote-base> instead")
+		return errors.New("Wrong pair format, use [exchange].<base-quote> instead")
 	}
-	qc.quote = pairWords[0]
-	qc.base = pairWords[1]
+	qc.base = pairWords[0]
+	qc.quote = pairWords[1]
 
 	switch exchange {
 	case "bigone":
@@ -76,7 +76,7 @@ func (qc *QuickCmd) onTick() {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
 
-		depth, err = qc.client.GetDepth(ctx, qc.quote, qc.base)
+		depth, err = qc.client.GetDepth(ctx, qc.base, qc.quote)
 		if err != nil {
 			log.Fatalf("bigone get depth failed: %v", err)
 		}
@@ -90,7 +90,7 @@ func (qc *QuickCmd) onTick() {
 		// get my orders
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
-		orders, err := qc.client.GetOrders(ctx, qc.quote, qc.base, 20)
+		orders, err := qc.client.GetOrders(ctx, qc.base, qc.quote, 20)
 		if err != nil {
 			log.Fatalf("bigone get my orders failed: %v", err)
 		}
@@ -107,7 +107,7 @@ func (qc *QuickCmd) onTick() {
 				log.Infof("price: %v, buy one: %v", v.Price, depth.Bids[0].Price)
 				if v.Price < depth.Bids[0].Price {
 					// cancel order below buy one
-					qc.client.CancelOrder(ctx, qc.quote, qc.base, v.ID)
+					qc.client.CancelOrder(ctx, qc.base, qc.quote, v.ID)
 					log.Infof("Cancel order price: %v, amount: %v", v.Price, v.Amount)
 					time.Sleep(2 * time.Second)
 				}
@@ -115,7 +115,7 @@ func (qc *QuickCmd) onTick() {
 			case "sell":
 				if v.Price > depth.Asks[0].Price {
 					// cancel order above sell one
-					qc.client.CancelOrder(ctx, qc.quote, qc.base, v.ID)
+					qc.client.CancelOrder(ctx, qc.base, qc.quote, v.ID)
 					log.Infof("Cancel order price: %v, amount: %v", v.Price, v.Amount)
 					time.Sleep(2 * time.Second)
 				}
@@ -152,17 +152,17 @@ func (qc *QuickCmd) onTick() {
 		}
 		switch qc.Side {
 		case "buy":
-			id, err := qc.client.Trade(ctx, qc.quote, qc.base, "BID", freeBTC, depth.Bids[0].Price+qc.Step)
+			id, err := qc.client.Trade(ctx, qc.base, qc.quote, "BID", freeBTC, depth.Bids[0].Price+qc.Step)
 			if err != nil {
 				log.Fatalf("client trade error: %v", err)
 			}
-			log.Infof("New Buy Order %v-%v: amount: %v, price:%v, order_id: %v", qc.quote, qc.base, freeBTC, depth.Bids[0].Price+qc.Step, id)
+			log.Infof("New Buy Order %v-%v: amount: %v, price:%v, order_id: %v", qc.base, qc.quote, freeBTC, depth.Bids[0].Price+qc.Step, id)
 		case "sell":
-			id, err := qc.client.Trade(ctx, qc.quote, qc.base, "ASK", freeBTC, depth.Asks[0].Price-qc.Step)
+			id, err := qc.client.Trade(ctx, qc.base, qc.quote, "ASK", freeBTC, depth.Asks[0].Price-qc.Step)
 			if err != nil {
 				log.Fatalf("client trade error: %v", err)
 			}
-			log.Infof("New Sell Order %v-%v: amount: %v, price:%v, order_id: %v", qc.quote, qc.base, freeBTC, depth.Asks[0].Price-qc.Step, id)
+			log.Infof("New Sell Order %v-%v: amount: %v, price:%v, order_id: %v", qc.base, qc.quote, freeBTC, depth.Asks[0].Price-qc.Step, id)
 		}
 	} else {
 		log.Infof("No new order needed")

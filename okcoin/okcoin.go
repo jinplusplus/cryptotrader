@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
@@ -31,7 +31,7 @@ func New(accessKey string, secretKey string) *OkCoin {
 
 // GetTicker 行情
 func (oc *OkCoin) GetTicker(base string, quote string) (*model.Ticker, error) {
-	url := API + "ticker.do" + "?symbol=" + quote + "_" + base
+	url := API + "ticker.do" + "?symbol=" + base + "_" + quote
 
 	log.Debugf("Request url: %v", url)
 

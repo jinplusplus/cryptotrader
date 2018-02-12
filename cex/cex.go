@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
@@ -40,9 +40,9 @@ func (bt *Cex) GetTicker(base string, quote string) (ticker *model.Ticker, rerr 
 	}()
 
 	var url string
-	if quote == "pay" {
+	if base == "pay" {
 		url = API + "/trade_43.js?v=" + strconv.FormatFloat(rand.Float64(), 'g', 1, 64)
-	} else if quote == "omg" {
+	} else if base == "omg" {
 		url = API + "/trade_41.js?v=" + strconv.FormatFloat(rand.Float64(), 'g', 1, 64)
 	}
 

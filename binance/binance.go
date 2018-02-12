@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	"github.com/Akagi201/utilgo/enums"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cast"
@@ -184,9 +184,9 @@ func (c *Client) getResponse(req *http.Request) ([]byte, error) {
 }
 
 // GetTicker 24hr ticker price change statistics, for GET /api/v1/ticker/24hr
-func (c *Client) GetTicker(ctx context.Context, quote string, base string) (*model.Ticker, error) {
+func (c *Client) GetTicker(ctx context.Context, base string, quote string) (*model.Ticker, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToUpper(quote)+strings.ToUpper(base))
+	v.Set("symbol", strings.ToUpper(base)+strings.ToUpper(quote))
 
 	req, err := c.newRequest(ctx, "GET", "ticker/24hr", v, nil, ApiV1)
 	if err != nil {
@@ -280,9 +280,9 @@ func (c *Client) GetTime(ctx context.Context) (*time.Time, error) {
 }
 
 // GetDepth Order book, for GET /api/v1/depth
-func (c *Client) GetDepth(ctx context.Context, quote string, base string, limit int64) (*model.OrderBook, error) {
+func (c *Client) GetDepth(ctx context.Context, base string, quote string, limit int64) (*model.OrderBook, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToUpper(quote)+strings.ToUpper(base))
+	v.Set("symbol", strings.ToUpper(base)+strings.ToUpper(quote))
 
 	if limit != 0 {
 		v.Set("limit", strconv.FormatInt(limit, 10))
@@ -350,9 +350,9 @@ func (c *Client) GetTickers(ctx context.Context) ([]model.SimpleTicker, error) {
 }
 
 // GetTrades Compressed/Aggregate trades list, for GET /api/v1/aggTrades
-func (c *Client) GetTrades(ctx context.Context, quote string, base string, fromID int64, startTime int64, endTime int64, limit int64) ([]model.Trade, error) {
+func (c *Client) GetTrades(ctx context.Context, base string, quote string, fromID int64, startTime int64, endTime int64, limit int64) ([]model.Trade, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToUpper(quote)+strings.ToUpper(base))
+	v.Set("symbol", strings.ToUpper(base)+strings.ToUpper(quote))
 
 	if fromID != 0 {
 		v.Set("fromId", strconv.FormatInt(fromID, 10))
@@ -398,9 +398,9 @@ func (c *Client) GetTrades(ctx context.Context, quote string, base string, fromI
 }
 
 // GetRecords for Kline/candlesticks, for GET /api/v1/ticker/allPrices
-func (c *Client) GetRecords(ctx context.Context, quote string, base string, interval string, startTime int64, endTime int64, limit int64) ([]model.Record, error) {
+func (c *Client) GetRecords(ctx context.Context, base string, quote string, interval string, startTime int64, endTime int64, limit int64) ([]model.Record, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToUpper(quote)+strings.ToUpper(base))
+	v.Set("symbol", strings.ToUpper(base)+strings.ToUpper(quote))
 	v.Set("interval", interval)
 
 	if startTime != 0 {
@@ -502,9 +502,9 @@ func (c *Client) GetAccount(ctx context.Context, recvWindow int64) ([]model.Bala
 }
 
 // Trade Send in a new order, for POST /api/v3/order
-func (c *Client) Trade(ctx context.Context, quote string, base string, side string, typ string, timeInForce string, quantity float64, price float64, stopPrice float64, icebergQty float64, recvWindow int64) (int64, error) {
+func (c *Client) Trade(ctx context.Context, base string, quote string, side string, typ string, timeInForce string, quantity float64, price float64, stopPrice float64, icebergQty float64, recvWindow int64) (int64, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToUpper(quote)+strings.ToUpper(base))
+	v.Set("symbol", strings.ToUpper(base)+strings.ToUpper(quote))
 	v.Set("side", side)
 	v.Set("type", typ)
 	v.Set("timeInForce", timeInForce)
@@ -534,9 +534,9 @@ func (c *Client) Trade(ctx context.Context, quote string, base string, side stri
 }
 
 // GetOrder Check an order's status, for GET /api/v3/order
-func (c *Client) GetOrder(ctx context.Context, quote string, base string, orderID int64, recvWindow int64) (*model.Order, error) {
+func (c *Client) GetOrder(ctx context.Context, base string, quote string, orderID int64, recvWindow int64) (*model.Order, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToUpper(quote)+strings.ToUpper(base))
+	v.Set("symbol", strings.ToUpper(base)+strings.ToUpper(quote))
 	v.Set("orderId", cast.ToString(orderID))
 
 	req, err := c.newPrivateRequest(ctx, "GET", "order", v, nil, recvWindow)
@@ -565,9 +565,9 @@ func (c *Client) GetOrder(ctx context.Context, quote string, base string, orderI
 }
 
 // CancelOrder Cancel an active orderf for DELETE /api/v3/order
-func (c *Client) CancelOrder(ctx context.Context, quote string, base string, orderID int64, recvWindow int64) error {
+func (c *Client) CancelOrder(ctx context.Context, base string, quote string, orderID int64, recvWindow int64) error {
 	v := url.Values{}
-	v.Set("symbol", strings.ToUpper(quote)+strings.ToUpper(base))
+	v.Set("symbol", strings.ToUpper(base)+strings.ToUpper(quote))
 	v.Set("orderId", cast.ToString(orderID))
 
 	req, err := c.newPrivateRequest(ctx, "DELETE", "order", v, nil, recvWindow)
@@ -586,9 +586,9 @@ func (c *Client) CancelOrder(ctx context.Context, quote string, base string, ord
 }
 
 // GetOrders Get all open orders on a symbol, for GET /api/v3/openOrders
-func (c *Client) GetOrders(ctx context.Context, quote string, base string, recvWindow int64) ([]model.Order, error) {
+func (c *Client) GetOrders(ctx context.Context, base string, quote string, recvWindow int64) ([]model.Order, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToUpper(quote)+strings.ToUpper(base))
+	v.Set("symbol", strings.ToUpper(base)+strings.ToUpper(quote))
 
 	req, err := c.newPrivateRequest(ctx, "GET", "openOrders", v, nil, recvWindow)
 	if err != nil {
@@ -622,9 +622,9 @@ func (c *Client) GetOrders(ctx context.Context, quote string, base string, recvW
 }
 
 // GetAllOrders Get all account orders; active, canceled, or filled, for GET /api/v3/allOrders
-func (c *Client) GetAllOrders(ctx context.Context, quote string, base string, orderID int64, limit int64, recvWindow int64) ([]model.Order, error) {
+func (c *Client) GetAllOrders(ctx context.Context, base string, quote string, orderID int64, limit int64, recvWindow int64) ([]model.Order, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToUpper(quote)+strings.ToUpper(base))
+	v.Set("symbol", strings.ToUpper(base)+strings.ToUpper(quote))
 	if orderID != 0 {
 		v.Set("orderId", cast.ToString(orderID))
 	}
@@ -664,9 +664,9 @@ func (c *Client) GetAllOrders(ctx context.Context, quote string, base string, or
 }
 
 // GetMyTrades Get trades for a specific account and symbol, for GET /api/v3/myTrades
-func (c *Client) GetMyTrades(ctx context.Context, quote string, base string, fromID int64, limit int64, recvWindow int64) ([]model.Trade, error) {
+func (c *Client) GetMyTrades(ctx context.Context, base string, quote string, fromID int64, limit int64, recvWindow int64) ([]model.Trade, error) {
 	v := url.Values{}
-	v.Set("symbol", strings.ToUpper(quote)+strings.ToUpper(base))
+	v.Set("symbol", strings.ToUpper(base)+strings.ToUpper(quote))
 
 	if fromID != 0 {
 		v.Set("fromId", strconv.FormatInt(fromID, 10))

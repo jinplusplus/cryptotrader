@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
@@ -32,7 +32,7 @@ func New(accessKey string, secretKey string) *Allcoin {
 
 // GetTicker 行情
 func (ac *Allcoin) GetTicker(base string, quote string) (*model.Ticker, error) {
-	url := API + "ticker?symbol=" + strings.ToLower(quote) + "_" + strings.ToLower(base)
+	url := API + "ticker?symbol=" + strings.ToLower(base) + "_" + strings.ToLower(quote)
 
 	log.Debugf("Request url: %v", url)
 

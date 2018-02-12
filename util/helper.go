@@ -1,7 +1,7 @@
 package util
 
 import (
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 )
 
 func GetNonZeroBalance(balances []model.Balance) []model.Balance {

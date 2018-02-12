@@ -14,8 +14,8 @@ import (
 var Opts struct {
 	Conf      string   `long:"conf" description:"config file"`
 	Exchanges []string `long:"exchanges" description:"the exchanges list for arbitrage"`
-	Base      string   `long:"base" default:"cny" description:"base currency"`
-	Quote     string   `long:"quote" default:"eth" description:"quote currency"`
+	Base      string   `long:"base" default:"eth" description:"base currency"`
+	Quote     string   `long:"quote" default:"cny" description:"quote currency"`
 	SlackKey  string   `long:"slack-key" description:"slack key"`
 	LogLevel  string   `long:"log-level" default:"info" description:"Adjust the log level. Valid options are: error, warn, info, debug"`
 }

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Akagi201/cryptotrader/model"
+	"github.com/forchain/cryptotrader/model"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 )
@@ -32,7 +32,7 @@ func New(accessKey string, secretKey string) *Bitflyer {
 
 // GetTicker 行情
 func (bf *Bitflyer) GetTicker(base string, quote string) (*model.Ticker, error) {
-	url := JPAPI + "ticker?product_code=" + strings.ToUpper(quote) + "_" + strings.ToUpper(base)
+	url := JPAPI + "ticker?product_code=" + strings.ToUpper(base) + "_" + strings.ToUpper(quote)
 
 	log.Debugf("Request url: %v", url)
 

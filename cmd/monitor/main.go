@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Akagi201/cryptotrader/binance"
+	"github.com/forchain/cryptotrader/binance"
 	"github.com/nlopes/slack"
 	log "github.com/sirupsen/logrus"
 )
@@ -66,7 +66,7 @@ func main() {
 
 	go func() {
 		for {
-			zrxTicker, err := binanceApi.GetTicker("btc", "zrx")
+			zrxTicker, err := binanceApi.GetTicker("zrx", "btc")
 			if err != nil {
 				log.Errorf("Get ZRX ticker failed, err: %v", err)
 			}
@@ -79,7 +79,7 @@ func main() {
 	}()
 
 	for {
-		zrxTicker, err := binanceApi.GetTicker("btc", "zrx")
+		zrxTicker, err := binanceApi.GetTicker("zrx", "btc")
 		if err != nil {
 			log.Error("Get ZRX ticker failed, err: %v", err)
 		}
