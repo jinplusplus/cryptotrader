@@ -37,6 +37,9 @@ type Trade struct {
 	Price  float64
 	Amount float64
 	Time   time.Time
+	Commission float64
+	CommissionAsset string
+	OrderID int64
 	Raw    string // exchange original info
 }
 
@@ -71,6 +74,7 @@ type Order struct {
 	Status     string
 	Type       string
 	Side       string
+	Time       time.Time
 	Raw        string
 }
 

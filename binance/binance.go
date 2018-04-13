@@ -397,7 +397,7 @@ func (c *Client) GetTrades(ctx context.Context, base string, quote string, fromI
 	return trades, nil
 }
 
-// GetRecords for Kline/candlesticks, for GET /api/v1/ticker/allPrices
+// GetRecords for Kline/candlesticks, for GET /api/v1/klines
 func (c *Client) GetRecords(ctx context.Context, base string, quote string, interval string, startTime int64, endTime int64, limit int64) ([]model.Record, error) {
 	v := url.Values{}
 	v.Set("symbol", strings.ToUpper(base)+strings.ToUpper(quote))
@@ -518,7 +518,7 @@ func (c *Client) Trade(ctx context.Context, base string, quote string, side stri
 		v.Set("icebergQty", cast.ToString(icebergQty))
 	}
 
-	req, err := c.newPrivateRequest(ctx, "POST", "order/test", v, nil, recvWindow)
+	req, err := c.newPrivateRequest(ctx, "POST", "order", v, nil, recvWindow)
 	if err != nil {
 		return 0, err
 	}
@@ -559,6 +559,7 @@ func (c *Client) GetOrder(ctx context.Context, base string, quote string, orderI
 	order.Status = gjson.GetBytes(body, "status").String()
 	order.Type = gjson.GetBytes(body, "type").String()
 	order.Side = gjson.GetBytes(body, "side").String()
+	order.Time = cast.ToTime(gjson.GetBytes(body, "time").Int() / 1000)
 	order.Raw = string(body)
 
 	return &order, nil
@@ -613,6 +614,7 @@ func (c *Client) GetOrders(ctx context.Context, base string, quote string, recvW
 		order.Status = value.Get("status").String()
 		order.Type = value.Get("type").String()
 		order.Side = value.Get("side").String()
+		order.Time = cast.ToTime(value.Get("time").Int() / 1000)
 		order.Raw = value.String()
 
 		orders = append(orders, order)
@@ -655,6 +657,7 @@ func (c *Client) GetAllOrders(ctx context.Context, base string, quote string, or
 		order.Status = value.Get("status").String()
 		order.Type = value.Get("type").String()
 		order.Side = value.Get("side").String()
+		order.Time = cast.ToTime(value.Get("time").Int() / 1000)
 		order.Raw = value.String()
 
 		orders = append(orders, order)
@@ -700,6 +703,9 @@ func (c *Client) GetMyTrades(ctx context.Context, base string, quote string, fro
 		} else {
 			trade.Type = "sell"
 		}
+		trade.Commission=cast.ToFloat64(value.Get("commission").String())
+		trade.CommissionAsset=value.Get("commissionAsset").String()
+		trade.OrderID=value.Get("orderId").Int()
 		trade.Raw = value.String()
 		trades = append(trades, trade)
 		return true // keep iterating
